@@ -124,7 +124,7 @@ function Results() {
     <>
       <Navbar />
       <div className="border-blue-400">
-        <div className="container flex flex-wrap items-center self-center justify-center">
+        <div className="container grid items-center self-center justify-center grid-cols-2 gap-2">
           <LineChart />
           <BarChart />
           <RadarChart />
