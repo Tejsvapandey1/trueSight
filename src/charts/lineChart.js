@@ -50,8 +50,8 @@ function lineChart() {
     },
   };
   return (
-    <div className="flex flex-col flex-1 h-full outline-2">
-      <h2 className="text-white">F1 Confidence Curve</h2>
+    <div className="flex flex-col flex-1 h-full my-3 outline-2">
+      <h2 className="text-center text-white">F1 Confidence Curve</h2>
       <Line data={data} options={options} />
     </div>
   );

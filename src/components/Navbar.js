@@ -4,12 +4,12 @@ import Button from "@mui/material/Button";
 export function Navbar() {
   return (
     <header className="bg-[#111729] flex text-[#FFFFFF] justify-evenly h-15">
-      <a href="/">
-        <div className="content-center flex-shrink-0 object-cover p-2 align-middle">
+    
+        <div className="flex-shrink-0 object-cover p-2 align-middle co ntent-center">
           {" "}
-          <img src={logo} className="flex h-8" />
+          <a href="/"><img src={logo} className="flex h-8" /></a>
         </div>
-      </a>
+      
       <div className="container flex content-center justify-center py-4 ">
         <a href="/">
           <p className="mx-2">Home</p>
@@ -25,7 +25,7 @@ export function Navbar() {
       <div className="p-2">
         <Button variant="outlined">
           <a href="/dashboard">
-            <p className="text-xs">Get Started</p>
+            <p className="text-xs" onClick={console.log("clicked")}>Get Started</p>
           </a>
         </Button>
       </div>

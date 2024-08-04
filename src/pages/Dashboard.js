@@ -95,6 +95,7 @@ function Dashboard() {
         <div>
           <h1 className="my-3 text-3xl font-semibold text-center text-white">
             Preview
+            <p className="text-sm font-light text-center text-white">please make sure to place your head properly</p>
           </h1>
           <video ref={videoRef} autoPlay width="640" height="480"></video>
           <br />
@@ -126,7 +127,7 @@ function Dashboard() {
               className="my-10 text-white"
               onClick={navigateToResults}
             >
-              Get Data
+              Get Insights
             </Button>
           )}
         </div>

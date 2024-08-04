@@ -16,8 +16,8 @@ export function Homepage() {
   return (
     <div>
       <Navbar />
-      <div className="w-full hero-section h-50 ">
-        <img src={bannerImg} className="self-center object-cover" />
+      <div className="flex flex-col w-full hero-section h-50 ">
+        <img src={bannerImg} className="self-center self-stretch object-cover" />
         <div className="flex flex-col items-center justify-center w-full sub-hero-section ">
           <p className="text-[#FFFFFF] text-4xl my-2 outline-white">
             Master Productivity
@@ -35,10 +35,10 @@ export function Homepage() {
         </div>
       </div>
       <div>
-        <div className="impImage bg-[#111729] flex justify-center flex-shrink-0 items-center text-white">
+        <div className="impImage bg-[#111729] flex justify-center  items-center text-white">
           <div
             style={{ height: "12rem", width: "12rem" }}
-            className="container  bg-[#111729] flex items-center justify-center  "
+            className="container  bg-[#111729] flex flex-shrink-0 items-center justify-center  "
           >
             <div className="relative w-full h-full mx-2 ml-10 psuedoimage">
               <img src={monitor} className="absolute top-0 h-40 start-0 " />
@@ -70,9 +70,9 @@ export function Homepage() {
         <div className="impImage bg-[#111729] flex justify-center items-center  text-white">
           <div
             style={{ height: "12rem", width: "12rem" }}
-            className="container  bg-[#111729] flex items-center justify-center mx-2 "
+            className="container flex-shrink-0 bg-[#111729] flex items-center justify-center mx-2 "
           >
-            <div className="relative flex-shrink-0 w-full h-full ml-10 psuedoimage">
+            <div className="relative w-full h-full ml-10 psuedoimage">
               <img src={clock} className="absolute top-0 h-40 start-0 " />
               <img src={dotGrid} className="absolute w-20 -left-5" />
             </div>

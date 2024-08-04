@@ -39,8 +39,8 @@ const F1BarChart = () => {
   };
 
   return (
-    <div className='flex flex-col flex-1 '>
-      <h2 className='text-white'>F1 Score Bar Chart</h2>
+    <div className='flex flex-col flex-1 my-4'>
+      <h2 className='text-center text-white'>F1 Score Bar Chart</h2>
       <Bar data={data} options={options} />
     </div>
   );
