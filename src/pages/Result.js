@@ -123,7 +123,7 @@ function Results() {
   return (
     <>
       <Navbar />
-      <div className="border-blue-400">
+      <div className="justify-center border-blue-400 d-flex">
         <div className="container grid items-center self-center justify-center grid-cols-2 gap-2">
           <LineChart />
           <BarChart />

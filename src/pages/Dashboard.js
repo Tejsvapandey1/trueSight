@@ -1,139 +1,67 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { Navbar } from "../components/Navbar";
 import Footer from "../components/Footer";
-import Button from "@mui/material/Button";
+import axios from "axios"; // Axios is used for making HTTP requests
+import { Button } from "@mui/material";
 
 function Dashboard() {
-  const [recording, setRecording] = useState(false);
-  const [recordedChunks, setRecordedChunks] = useState([]);
-  const [recordedUrl, setRecordedUrl] = useState("");
-  const videoRef = useRef(null);
-  const recordedVideoRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const navigate = useNavigate();
+  const [videoSrc, setVideoSrc] = useState(null);
+  const [videoFile, setVideoFile] = useState(null); // State to store the selected video file
+  const [videoFormat, setVideoFormat] = useState(""); // State to store the video format (MIME type)
 
-  useEffect(() => {
-    const getMedia = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-        videoRef.current.srcObject = stream;
-        mediaRecorderRef.current = new MediaRecorder(stream);
-        mediaRecorderRef.current.ondataavailable = handleDataAvailable;
-        mediaRecorderRef.current.onstop = handleStop;
-      } catch (error) {
-        console.error("Error accessing media devices.", error);
-      }
-    };
-    getMedia();
+  const handleVideoUpload = (event) => {
+    const file = event.target.files[0]; // Get the selected file
+    setVideoFile(file); // Store the video file in state
 
-    // Cleanup function to stop the video stream when the component unmounts
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const tracks = videoRef.current.srcObject.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    };
-  }, []);
-
-  const handleDataAvailable = (event) => {
-    if (event.data.size > 0) {
-      setRecordedChunks((prev) => [...prev, event.data]);
+    // Print video format (MIME type)
+    if (file) {
+      setVideoFormat(file.type); // Set the video format state
+      const videoURL = URL.createObjectURL(file);
+      setVideoSrc(videoURL); // Set the video preview URL
     }
   };
 
-  const handleStop = () => {
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
-    const url = URL.createObjectURL(blob);
-    setRecordedUrl(url);
-  };
+  const handleSubmit = async () => {
+    if (!videoFile) return;
 
-  const startRecording = () => {
-    setRecordedChunks([]);
-    setRecordedUrl("");
-    mediaRecorderRef.current.start();
-    setRecording(true);
-  };
+    // Create a FormData object to hold the file
+    const formData = new FormData();
+    formData.append("video", videoFile); // 'video' is the key used in the backend to access the file
 
-  const stopRecording = () => {
-    mediaRecorderRef.current.stop();
-    setRecording(false);
-  };
-
-  const navigateToResults = () => {
-    // Stop the media stream
-    if (videoRef.current && videoRef.current.srcObject) {
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
+    try {
+      // Send a POST request to the backend
+      const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure that the request is sent as multipart
+        },
+      });
+      console.log("Video uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading video:", error);
     }
-
-    // Create a file from the recorded chunks
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
-    const file = new File([blob], "recording.webm", { type: "video/webm" });
-
-    // Navigate to the /results route with the file
-    navigate("/results", { state: { file } });
   };
-
-  useEffect(() => {
-    console.log("Recorded chunks:", recordedChunks);
-  }, [recordedChunks]);
-
-  useEffect(() => {
-    if (recordedVideoRef.current) {
-      recordedVideoRef.current.src = recordedUrl;
-    }
-  }, [recordedUrl]);
 
   return (
-    <>
+    <div>
       <Navbar />
-      <div className="flex flex-col items-center justify-center w-full">
-        <div>
-          <h1 className="my-3 text-3xl font-semibold text-center text-white">
-            Preview
-            <p className="text-sm font-light text-center text-white">please make sure to place your head properly</p>
-          </h1>
-          <video ref={videoRef} autoPlay width="640" height="480"></video>
-          <br />
-          <div className="flex items-center justify-around">
-            <Button
-              variant="contained"
-              disabled={recording}
-              className="mx-1 text-white"
-              onClick={startRecording}
-            >
-              Start Recording
-            </Button>
-            <Button
-              variant="contained"
-              disabled={!recording}
-              className="mx-1 text-white"
-              onClick={stopRecording}
-            >
-              Stop Recording
-            </Button>
-          </div>
+      <input
+       className="text-white"
+        type="file"
+        accept="video/*"
+        onChange={handleVideoUpload}
+      />
+      {videoSrc && (
+        <div  className="text-white">
+          <video width="400" controls  className="text-white">
+            <source src={videoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <p className="text-white">Video format: {videoFormat}</p> {/* Display the video format */}
+          <Button onClick={handleSubmit}  className="text-white">Upload Video</Button> {/* Button to trigger video upload */}
         </div>
-        
-        <div className="flex flex-col items-center justify-center">
-          
-          {recordedUrl && (
-            <Button
-              variant="contained"
-              className="my-10 text-white"
-              onClick={navigateToResults}
-            >
-              Get Insights
-            </Button>
-          )}
-        </div>
-      </div>
+      )}
       <Footer />
-    </>
+    </div>
   );
 }
 
