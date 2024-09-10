@@ -1,6 +1,7 @@
 function Footer() {
   return (
-    <div className="flex items-center justify-center text-white h-[35vh] border-t border-[#70B5ED] my-5">
+    <div style={{ margin: "50px 0 0 0" }}
+    className="flex items-center justify-center text-white max-h-[13rem] h-[35vh] border-t border-[#70B5ED] ">
       <div className="container flex-col items-center justify-around flex-1">
         <a href="/">
           <p className="text-center">FocusFlow</p>

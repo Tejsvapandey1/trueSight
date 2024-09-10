@@ -7,7 +7,7 @@ export function Navbar() {
     
         <div className="flex-shrink-0 object-cover p-2 align-middle co ntent-center">
           {" "}
-          <a href="/"><img src={logo} className="flex h-8" /></a>
+          <a href="/"><img alt=""src={logo} className="flex h-8" /></a>
         </div>
       
       <div className="container flex content-center justify-center py-4 ">

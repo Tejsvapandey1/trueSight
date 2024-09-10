@@ -48,8 +48,9 @@ def process_video(video_path):
 def upload_video():
     if 'video' not in request.files:
         return jsonify({'error': 'No video file provided'}), 400
-
+    
     video = request.files['video']
+    print(video, "recieved")
     video_path = os.path.join('uploads', video.filename)
 
     # Save the video to the server
@@ -64,4 +65,4 @@ def upload_video():
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
-    app.run(debug=True)
+    app.run(debug=True) 
