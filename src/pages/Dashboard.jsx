@@ -58,7 +58,7 @@ function Dashboard() {
       <Navbar />
       <div className="min-h-[16rem] flex flex-col my-10 justify-center items-center">
         <input
-          className="my-3 text-white rounded-md"
+          className="ml-[15%] my-3 text-white rounded-md"
           type="file"
           accept="video/*"
           onChange={handleVideoUpload}
@@ -69,10 +69,12 @@ function Dashboard() {
               <source src={videoSrc} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            
-            <Button onClick={handleSubmit} className="self-center my-3 text-white">
+            <div className="flex content-center justify-center my-3 border border-blue-600 "> 
+            <Button onClick={handleSubmit} className="self-center my-3 mt-4 text-white ">
               Upload Video
             </Button>
+            </div>
+            
           </div>
         )}
       </div>
