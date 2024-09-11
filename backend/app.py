@@ -88,7 +88,7 @@ def preprocess_image(image, target_size=(256, 256)):
 
 # Analyze video frames with the deepfake model
 def analyze_video(video_path, model):
-    list_of_predictions = []
+    list_of_predictions = []  # Local variable to store predictions
     total_frames = 0
 
     # Open the video file
@@ -110,8 +110,8 @@ def analyze_video(video_path, model):
         # Make predictions
         predictions = model.predict(preprocessed_frame)
 
-        # Get prediction value
-        prediction_value = predictions[0][0]
+        # Get prediction value and convert to Python float
+        prediction_value = float(predictions[0][0])  # Convert to standard Python float
         list_of_predictions.append(prediction_value)
         total_frames += 1
 
@@ -128,29 +128,19 @@ def analyze_video(video_path, model):
     is_deepfake = average_prediction <= 0.5
     result = "REAL VIDEO" if not is_deepfake else "FAKE VIDEO"
     
-    return result, duration, bool(is_deepfake)  # Convert to standard boolean
+    return result, duration, bool(is_deepfake), list_of_predictions  # Return predictions list
 
 # Serve video files from the uploads directory
 @app.route('/uploads/<filename>', methods=['GET'])
 def serve_video(filename):
     return send_from_directory('uploads', filename)
 
-# Video processing function
-def process_video(video_path):
-    cap = cv2.VideoCapture(video_path)
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    duration = frame_count / fps if fps else 0
-    cap.release()
-
-    return "Video processed successfully", duration, "fake" in video_path.lower()
-
 # Route to handle video upload
 @app.route('/upload', methods=['POST'])
 def upload_video():
     if 'video' not in request.files:
         return jsonify({'error': 'No video file provided'}), 400
-    
+
     video = request.files['video']
     video_path = os.path.join('uploads', video.filename)
 
@@ -160,17 +150,28 @@ def upload_video():
 
     # Process the video and get the result, duration, and deepfake status
     try:
-        result, duration, is_deepfake = analyze_video(video_path, model)
+        result, duration, is_deepfake, list_of_predictions = analyze_video(video_path, model)
     except ValueError as e:
         print(f"Error unpacking values: {e}")
         return jsonify({'error': 'An error occurred during video analysis.'}), 500
 
-    # Convert values to standard types if necessary
+    avg=0
+    for i in list_of_predictions:
+        print(i)
+        avg=avg+i
+    avg=avg/len(list_of_predictions)
+    avg=avg*100
+    avg=round(avg)
+    print(avg)
+
+    # Create response data
     response_data = {
         'result': result,
         'duration': duration,
         'videoFileName': video.filename,
-        'isDeepfake': bool(is_deepfake)  # Ensure it's a standard boolean
+        'list': list_of_predictions,  # Send the list of predictions
+        'avg': avg,
+        'isDeepfake': is_deepfake  # Ensure it's a standard boolean
     }
 
     return jsonify(response_data)

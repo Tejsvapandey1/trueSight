@@ -11,8 +11,11 @@ function Result() {
   const videoUrl = data?.videoFileName
     ? `http://127.0.0.1:5000/uploads/${data.videoFileName}` // Use backend URL to access the video
     : null;
-  const isDeepfake = data?.isDeepfake; // Get the deepfake detection result
-
+  // const isDeepfake = data?.isDeepfake; // Get the deepfake detection result
+  const list = data?.list || []; // Default to an empty array if list is undefined
+  const avg = data?.avg;
+  
+const isDeepfake = avg > 60 ? false : true;
   return (
     <>
       <Navbar />
@@ -25,8 +28,8 @@ function Result() {
               {isDeepfake ? "DeepFake - Detected" : "No DeepFake Found"}
             </h1>
             <div className="flex">
-              {/* Display the Video */}
-              <LineChart />
+              <LineChart data={list}/>
+              
               {videoUrl && (
                 <div className="flex justify-center flex-1 my-4">
                   <video
@@ -43,9 +46,12 @@ function Result() {
                 </div>
               )}
             </div>
+
+           
+
             <hr className="my-2" />
             <div className="flex flex-col content-center justify-center flex-1 border border-white rounded-lg shadow-lg">
-              {!isDeepfake && (
+              {isDeepfake && (
                 <div className="flex flex-col p-6 rounded-lg shadow-lg">
                   <h1 className="my-3 text-lg font-semibold text-center underline">
                     Speech Detected From Model
@@ -65,7 +71,7 @@ function Result() {
               <h1 className="p-2 my-3 ml-3 text-lg font-semibold text-center border border-white rounded-lg">
                 Synchronization Score :-{" "}
                 <span className="text-cyan-400">
-                  {isDeepfake ? "10%" : "96%"}
+                  {avg}
                 </span>
               </h1>
             </div>
