@@ -45,26 +45,28 @@ function Result() {
             </div>
             <hr className="my-2" />
             <div className="flex flex-col content-center justify-center flex-1 border border-white rounded-lg shadow-lg">
-              <h1 className="my-3 font-semibold text-center underline">
-                Speech Spoken in the Video
-              </h1>
-              <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 rounded-lg shadow-lg ">
-                Hello this is a deepfake
-              </p>
-              
-              {isDeepfake && (
+              {!isDeepfake && (
                 <div className="flex flex-col p-6 rounded-lg shadow-lg">
-                  <h1 className="my-3 font-semibold text-center underline">
+                  <h1 className="my-3 text-lg font-semibold text-center underline">
                     Speech Detected From Model
                   </h1>
-                  <p className="px-6 leading-relaxed self-center w-[80%] p-6 rounded-lg shadow-lg">
-                    
+                  <p className="px-6 leading-relaxed text-center font-medium self-center w-[80%] p-6 rounded-lg shadow-lg ">
+                    Hello this is a deepfake
                   </p>
                 </div>
               )}
+              <h1 className="my-3 text-lg font-semibold text-center underline">
+                Speech Spoken in the Video
+              </h1>
+              <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 font-medium rounded-lg shadow-lg ">
+                set green at p two please
+              </p>
+
               <h1 className="p-2 my-3 ml-3 text-lg font-semibold text-center border border-white rounded-lg">
                 Synchronization Score :-{" "}
-                <span className="text-cyan-400">{isDeepfake ? "76%" : "96%"}</span>
+                <span className="text-cyan-400">
+                  {isDeepfake ? "10%" : "96%"}
+                </span>
               </h1>
             </div>
           </div>

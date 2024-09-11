@@ -1,5 +1,4 @@
 import os
-import time
 import numpy as np
 import cv2
 from flask import Flask, request, jsonify, send_from_directory
@@ -72,7 +71,12 @@ class Meso4(Classifier):
 
 # Initialize model and load weights
 model = Meso4()
-model.load('path_to_weights/Meso4_DF.h5')  # Update this path
+model_path = '../model/Meso4_DF.h5'
+
+if not os.path.isfile(model_path):
+    raise FileNotFoundError(f"The model file {model_path} does not exist.")
+
+model.load(model_path)
 
 # Preprocess the image
 def preprocess_image(image, target_size=(256, 256)):
@@ -84,7 +88,10 @@ def preprocess_image(image, target_size=(256, 256)):
 
 # Analyze video frames with the deepfake model
 def analyze_video(video_path, model):
-    predictions = []
+    list_of_predictions = []
+    total_frames = 0
+
+    # Open the video file
     cap = cv2.VideoCapture(video_path)
 
     # Get video properties
@@ -97,19 +104,36 @@ def analyze_video(video_path, model):
         if not ret:
             break
 
+        # Preprocess the frame
         preprocessed_frame = preprocess_image(frame)
-        prediction = model.predict(preprocessed_frame)[0][0]
-        predictions.append(prediction)
 
+        # Make predictions
+        predictions = model.predict(preprocessed_frame)
+
+        # Get prediction value
+        prediction_value = predictions[0][0]
+        list_of_predictions.append(prediction_value)
+        total_frames += 1
+
+    # Release resources
     cap.release()
 
-    avg_prediction = np.mean(predictions) if predictions else 0
-    result = "FAKE VIDEO" if avg_prediction < 0.5 else "REAL VIDEO"
+    # Calculate the average of the predictions
+    if list_of_predictions:
+        average_prediction = np.mean(list_of_predictions)
+    else:
+        average_prediction = 0
 
-    return {
-        "result": result,
-        "duration": round(duration, 2)
-    }
+    # Determine if the video is real or fake based on the average prediction
+    is_deepfake = average_prediction <= 0.5
+    result = "REAL VIDEO" if not is_deepfake else "FAKE VIDEO"
+    
+    return result, duration, bool(is_deepfake)  # Convert to standard boolean
+
+# Serve video files from the uploads directory
+@app.route('/uploads/<filename>', methods=['GET'])
+def serve_video(filename):
+    return send_from_directory('uploads', filename)
 
 # Video processing function
 def process_video(video_path):
@@ -121,12 +145,7 @@ def process_video(video_path):
 
     return "Video processed successfully", duration, "fake" in video_path.lower()
 
-# Serve video files from the uploads directory
-@app.route('/uploads/<filename>')
-def get_video(filename):
-    return send_from_directory('uploads', filename)
-
-# Upload video and analyze with deepfake model
+# Route to handle video upload
 @app.route('/upload', methods=['POST'])
 def upload_video():
     if 'video' not in request.files:
@@ -135,15 +154,26 @@ def upload_video():
     video = request.files['video']
     video_path = os.path.join('uploads', video.filename)
 
+    # Save the video to the server
     video.save(video_path)
-    result, duration, is_deepfake = analyze_video(video_path, model)
+    print(f"Video {video.filename} saved to {video_path}")
 
-    return jsonify({
-        'result': result['result'],
+    # Process the video and get the result, duration, and deepfake status
+    try:
+        result, duration, is_deepfake = analyze_video(video_path, model)
+    except ValueError as e:
+        print(f"Error unpacking values: {e}")
+        return jsonify({'error': 'An error occurred during video analysis.'}), 500
+
+    # Convert values to standard types if necessary
+    response_data = {
+        'result': result,
         'duration': duration,
         'videoFileName': video.filename,
-        'isDeepfake': result['result'] == "FAKE VIDEO"
-    })
+        'isDeepfake': bool(is_deepfake)  # Ensure it's a standard boolean
+    }
+
+    return jsonify(response_data)
 
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
