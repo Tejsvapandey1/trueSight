@@ -5,9 +5,9 @@ export function Navbar() {
   return (
     <header className="bg-[#111729] flex text-[#FFFFFF] justify-evenly h-15">
     
-        <div className="flex-shrink-0 object-cover p-2 align-middle co ntent-center">
+        <div className="flex content-center justify-center flex-shrink-0 object-cover p-2 align-middle">
           {" "}
-          <a href="/"><img alt=""src={logo} className="flex h-8" /></a>
+          <a href="/"><img alt=""src={logo} className="flex h-12 mx-2" /></a >
         </div>
       
       <div className="container flex content-center justify-center py-4 ">

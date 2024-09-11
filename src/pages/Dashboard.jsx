@@ -46,7 +46,7 @@ function Dashboard() {
       );
       console.log("Video uploaded successfully:", response.data);
 
-      // After successful upload, redirect to result page
+      // After successful upload, redirect to result page with response data
       navigate("/result", { state: { data: response.data } });
     } catch (error) {
       console.error("Error uploading video:", error);
@@ -56,21 +56,21 @@ function Dashboard() {
   return (
     <div>
       <Navbar />
-      <div className="min-h-[16rem] flex justify-center items-center">
+      <div className="min-h-[16rem] flex flex-col my-10 justify-center items-center">
         <input
-          className="text-white rounded-md"
+          className="my-3 text-white rounded-md"
           type="file"
           accept="video/*"
           onChange={handleVideoUpload}
         />
         {videoSrc && (
-          <div className="text-white">
+          <div className="flex flex-col text-white">
             <video width="400" controls className="text-white">
               <source src={videoSrc} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            <p className="text-white">Video format: {videoFormat}</p>
-            <Button onClick={handleSubmit} className="text-white">
+            
+            <Button onClick={handleSubmit} className="self-center my-3 text-white">
               Upload Video
             </Button>
           </div>

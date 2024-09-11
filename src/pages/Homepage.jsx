@@ -23,8 +23,7 @@ export function Homepage() {
             Master Productivity
           </p>
           <p className="text-[#BAC0C5] my-2 w-48 self-center">
-            Unlock Your Full Potential: FocusFlow's powerful features help you
-            stay on track
+            TrueSight: We Unmask Deepfakes
           </p>
           <p className="text-[#70B5ED] text-xs my-2 flex">
             <div className="flex items-center justify-center flex-shrink-0">

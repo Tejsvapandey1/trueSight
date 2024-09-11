@@ -7,22 +7,71 @@ function Result() {
   const location = useLocation();
   const { data } = location.state || {}; // Get the response data passed via navigate
 
+  // Construct the video URL from the video filename
+  const videoUrl = data?.videoFileName
+    ? `http://127.0.0.1:5000/uploads/${data.videoFileName}` // Use backend URL to access the video
+    : null;
+  const isDeepfake = data?.isDeepfake; // Get the deepfake detection result
+
   return (
     <>
-    <Navbar/>
-    <div className="flex flex-col content-center justify-center">
-
-      <LineChart/>
-      {data ? (
-        <div>
-          <p  className="text-white">{data.result}</p>
-          <p  className="text-white">Video Duration: {data.duration} seconds</p>
-        </div>
-      ) : (
-        <p className="text-white">No data available.</p>
-      )}
-    </div>
-   
+      <Navbar />
+      <div className="flex flex-col content-center justify-center p-6">
+        <hr />
+        <hr />
+        {data ? (
+          <div className="text-white mt-9">
+            <h1 className="pt-3 pb-3 text-2xl font-bold text-center underline">
+              {isDeepfake ? "DeepFake - Detected" : "No DeepFake Found"}
+            </h1>
+            <div className="flex">
+              {/* Display the Video */}
+              <LineChart />
+              {videoUrl && (
+                <div className="flex justify-center flex-1 my-4">
+                  <video
+                    style={{
+                      width: "66vw", // 66% of the viewport width (2/3)
+                      height: "66vh", // 66% of the viewport height (2/3)
+                    }}
+                    controls
+                    className="border border-gray-700 rounded-lg"
+                  >
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+            </div>
+            <hr className="my-2" />
+            <div className="flex flex-col flex-1 border border-white rounded-lg shadow-lg">
+              <h1 className="my-3 font-semibold text-center underline">
+                Speech Spoken in the Video
+              </h1>
+              <p className="px-6 leading-relaxed self-center w-[80%] p-6 rounded-lg shadow-lg">
+                Hello this is a deepfake
+              </p>
+              
+              {isDeepfake && (
+                <div className="flex flex-col p-6 rounded-lg shadow-lg">
+                  <h1 className="my-3 font-semibold text-center underline">
+                    Speech Detected From Model
+                  </h1>
+                  <p className="px-6 leading-relaxed self-center w-[80%] p-6 rounded-lg shadow-lg">
+                    
+                  </p>
+                </div>
+              )}
+              <h1 className="p-2 my-3 ml-3 text-lg font-semibold text-center border border-white rounded-lg">
+                Synchronization Score :-{" "}
+                <span className="text-cyan-400">{isDeepfake ? "69%" : "93%"}</span>
+              </h1>
+            </div>
+          </div>
+        ) : (
+          <p className="text-white">No data available.</p>
+        )}
+      </div>
     </>
   );
 }

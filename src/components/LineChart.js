@@ -58,10 +58,11 @@ const LineChart = () => {
   };
 
   return (
-    <div className='mx-3 my-6 '>
-      <h2 className='text-white'>Data from Backend</h2>
-      <Line data={data} options={options} />
-    </div>
+    <div className='w-1/2 mx-3 my-6 '>
+    <h2 className='text-white'>Data from Backend</h2>
+    <Line data={data} options={options} />
+  </div>
+  
   );
 };
 
