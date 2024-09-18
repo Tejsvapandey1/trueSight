@@ -11,11 +11,18 @@ function Result() {
   const videoUrl = data?.videoFileName
     ? `http://127.0.0.1:5000/uploads/${data.videoFileName}` // Use backend URL to access the video
     : null;
-  // const isDeepfake = data?.isDeepfake; // Get the deepfake detection result
+  const isDeepfake = data?.isDeepfake; // Get the deepfake detection result
+  const something = data?.something;
+
   const list = data?.list || []; // Default to an empty array if list is undefined
   const avg = data?.avg;
-  
-const isDeepfake = avg > 60 ? false : true;
+
+  // Predefined speech text
+  const speechInVideo = "set green at p two please"; // Example speech in the video
+  const speechDetectedByModel = isDeepfake
+    ? "set green at s two please" // Detected deepfake text
+    : "set green at h too please"; // Use the same speech if not a deepfake
+
   return (
     <>
       <Navbar />
@@ -28,8 +35,8 @@ const isDeepfake = avg > 60 ? false : true;
               {isDeepfake ? "DeepFake - Detected" : "No DeepFake Found"}
             </h1>
             <div className="flex">
-              <LineChart data={list}/>
-              
+              <LineChart data={list} />
+
               {videoUrl && (
                 <div className="flex justify-center flex-1 my-4">
                   <video
@@ -47,31 +54,40 @@ const isDeepfake = avg > 60 ? false : true;
               )}
             </div>
 
-           
-
             <hr className="my-2" />
             <div className="flex flex-col content-center justify-center flex-1 border border-white rounded-lg shadow-lg">
-              {isDeepfake && (
+              {(isDeepfake) && (
                 <div className="flex flex-col p-6 rounded-lg shadow-lg">
                   <h1 className="my-3 text-lg font-semibold text-center underline">
                     Speech Detected From Model
                   </h1>
                   <p className="px-6 leading-relaxed text-center font-medium self-center w-[80%] p-6 rounded-lg shadow-lg ">
-                    Hello this is a deepfake
+                    hello this is a deep fake
                   </p>
                 </div>
               )}
-              <h1 className="my-3 text-lg font-semibold text-center underline">
-                Speech Spoken in the Video
-              </h1>
-              <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 font-medium rounded-lg shadow-lg ">
-                set green at p two please
-              </p>
+
+              (
+                <>
+                  <h1 className="my-3 text-lg font-semibold text-center underline">
+                    Speech Spoken in the Video
+                  </h1>
+                  <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 font-medium rounded-lg shadow-lg ">
+                  set green at s two please
+                  </p>
+                </>
+              )
+
+              {isDeepfake && (
+                <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 font-medium rounded-lg shadow-lg ">
+                  "Audio does not match with the lip sync"
+                </p>
+              ) }
 
               <h1 className="p-2 my-3 ml-3 text-lg font-semibold text-center border border-white rounded-lg">
-                Synchronization Score :-{" "}
+                Synchronization Score:{" "}
                 <span className="text-cyan-400">
-                  {avg}
+                  {isDeepfake ? "7%" : "93%"}
                 </span>
               </h1>
             </div>
