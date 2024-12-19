@@ -114,12 +114,8 @@ function Video() {
               </h1>
 
               <div>
-                <p className="m-3 font-semibold text-center">
-                  Video lenght
-                </p>
-                <p className="m-3 font-semibold text-center">
-                 Frames 
-                </p>
+                <p className="m-3 font-semibold text-center">Video lenght</p>
+                <p className="m-3 font-semibold text-center">Frames</p>
                 <p className="m-3 text-xl font-bold text-center text-blue-500">
                   Ask Viswa what are we getting from the backend
                 </p>

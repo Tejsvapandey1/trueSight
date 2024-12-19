@@ -4,18 +4,24 @@ import LineChart from "../components/LineChart";
 import { Navbar } from "../components/Navbar";
 
 function Result() {
-  const location = useLocation();
-  const { data } = location.state || {}; // Get the response data passed via navigate
+  // Hardcoded data to simulate deepfake detection
+  const data = {
+    videoFileName: "example_deepfake.mp4",
+    isDeepfake: true,
+    something: "Sample data",
+    list: [10, 20, 30, 40, 50], // Example chart data
+    avg: 30,
+  };
 
   // Construct the video URL from the video filename
-  const videoUrl = data?.videoFileName
+  const videoUrl = data.videoFileName
     ? `http://127.0.0.1:5000/uploads/${data.videoFileName}` // Use backend URL to access the video
     : null;
-  const isDeepfake = data?.isDeepfake; // Get the deepfake detection result
-  const something = data?.something;
+  const isDeepfake = data.isDeepfake; // Get the deepfake detection result
+  const something = data.something;
 
-  const list = data?.list || []; // Default to an empty array if list is undefined
-  const avg = data?.avg;
+  const list = data.list || []; // Default to an empty array if list is undefined
+  const avg = data.avg;
 
   // Predefined speech text
   const speechInVideo = "set green at p two please"; // Example speech in the video
@@ -37,26 +43,12 @@ function Result() {
             <div className="flex">
               <LineChart data={list} />
 
-              {videoUrl && (
-                <div className="flex justify-center flex-1 my-4">
-                  <video
-                    style={{
-                      width: "66vw", // 66% of the viewport width (2/3)
-                      height: "66vh", // 66% of the viewport height (2/3)
-                    }}
-                    controls
-                    className="border border-gray-700 rounded-lg"
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              )}
+              
             </div>
 
             <hr className="my-2" />
             <div className="flex flex-col content-center justify-center flex-1 border border-white rounded-lg shadow-lg">
-              {(isDeepfake) && (
+              {!isDeepfake && (
                 <div className="flex flex-col p-6 rounded-lg shadow-lg">
                   <h1 className="my-3 text-lg font-semibold text-center underline">
                     Speech Detected From Model
@@ -73,7 +65,7 @@ function Result() {
                     Speech Spoken in the Video
                   </h1>
                   <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 font-medium rounded-lg shadow-lg ">
-                  set green at s two please
+                    No speech
                   </p>
                 </>
               )
@@ -82,12 +74,12 @@ function Result() {
                 <p className="px-6 leading-relaxed text-center self-center w-[80%] p-6 font-medium rounded-lg shadow-lg ">
                   "Audio does not match with the lip sync"
                 </p>
-              ) }
+              )}
 
               <h1 className="p-2 my-3 ml-3 text-lg font-semibold text-center border border-white rounded-lg">
-                Synchronization Score:{" "}
+                Synchronization Score: {" "}
                 <span className="text-cyan-400">
-                  {isDeepfake ? "7%" : "93%"}
+                  {isDeepfake ? "0%" : "93%"}
                 </span>
               </h1>
             </div>

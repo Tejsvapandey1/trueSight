@@ -38,7 +38,7 @@ function Audio() {
             </div>
             {/* Increased height of LineChart container */}
             <div className=" rounded-md p-4 w-[95%] h-[200px] my-3 flex justify-evenly content-center ml-2">
-              <div className="bg-[#0D0F15] flex w-[50%]  flex justify-center content-center rounded-md">
+              <div className="bg-[#0D0F15] flex w-[50%]  justify-center content-center rounded-md">
                 {" "}
                 <img src={MonitorPng} alt="..." />
               </div>
